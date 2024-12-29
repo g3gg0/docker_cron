@@ -9,17 +9,19 @@ This project is a lightweight and straightforward helper designed to enhance my 
 
 ### The Problem
 
-All my Docker stacks contain one or more stack-specific backup containers that need to run on a daily, weekly, or even monthly basis. Additionally, the Certbot for updating certificates must also be executed periodically. Unfortunately, I couldn't find a simple, working solution. Many available options were either too complex or didn’t work out of the box. So, I built my own cron runner.
+All my Docker stacks contain one or more stack-specific backup containers that need to run on a daily, weekly, or even monthly basis. Additionally, the Certbot for updating certificates must also be executed periodically.
+Unfortunately, I couldn't find a simple, working solution. Many available options were either too complex or didn’t work out of the box. So, I built my own cron runner.
 
 If you manage this manually using crontab (what i did intially), you might overlook some details or need to back up this setup as well or end up editing too many places just to add another backup.
 
 ### The Solution
 
-To avoid this, I decided to use a "runner" container that executes all backup containers with a specific label. It’s nothing fancy or complex—just an internal helper. I’m sharing it with you as an optional utility. Take it or leave it.
+To avoid this, I decided to use a "runner" container that executes all backup containers with a specific label. It’s nothing fancy or complex - just an internal helper. I’m sharing it with you as an optional utility.
+Take it or leave it.
 
 ### Why Use This?
 
-This utility is designed to be simple and practical—nothing fancy or overly engineered. It works reliably within my internal Docker environment.
+This utility is designed to be simple and practical - nothing fancy or overly engineered. It works reliably within my internal Docker environment.
 
 I reworked it, put it into a docker container on its own and am sharing it as an optional tool that you can use if it suits your needs.
 Take it or leave it - it's up to you.
