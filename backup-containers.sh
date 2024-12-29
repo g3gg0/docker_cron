@@ -16,7 +16,7 @@ for container in $containers; do
     cron_label=$(docker inspect -f '{{ index .Config.Labels "de.g3gg0.cron" }}' "$container")
     container_name=$(docker inspect -f '{{ .Name }}' "$container" | sed 's|/||')
 
-    # Populate lists based on the label
+    # Populate lists based on the label. Need separate variables as bash cannot assign lists to arrays
     case "$cron_label" in
         quarterhourly)
             quarterhourly+=("$container ($container_name)")
@@ -131,7 +131,7 @@ case "$1" in
         ;;
 
     monthly)
-        echo -e "Starting monthly containers:}"
+        echo -e "Starting monthly containers:"
         for container_entry in "${monthly[@]}"; do
             echo " - $container_entry"
             container_id=$(echo "$container_entry" | awk '{print $1}')
@@ -144,3 +144,4 @@ case "$1" in
         ;;
 esac
 
+exit 0
