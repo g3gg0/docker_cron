@@ -1,5 +1,45 @@
 #!/bin/bash
 
+declare -A container_table
+
+schedules=(quarterhourly hourly daily weekly monthly)
+for schedule in "${schedules[@]}"; do
+    containers_by_schedule[$schedule]=""
+done
+
+start_containers() {
+    local schedule=$1
+
+    echo -e "Starting $schedule containers:"
+    if [[ -z "${container_table[$schedule]}" ]]; then
+        echo " - none"
+        return
+    fi
+    for container_entry in ${container_table[$schedule]}; do
+        container_id=$(echo "$container_entry" | awk --field-separator=':' '{print $1}')
+        container_name=$(echo "$container_entry" | awk --field-separator=':' '{print $2}')
+        echo " - $container_name ($container_id)"
+        docker start "$container_id"
+    done
+}
+
+list_containers() {
+    local schedule="$1"
+
+    echo -e "  Registered $schedule containers:"
+    if [[ -z "${container_table[$schedule]}" ]]; then
+        echo "   - none"
+        return
+    fi
+
+    for container_entry in ${container_table[$schedule]}; do
+        container_id=$(echo "$container_entry" | awk --field-separator=':' '{print $1}')
+        container_name=$(echo "$container_entry" | awk --field-separator=':' '{print $2}')
+        echo "   - $container_name ($container_id)"
+    done
+}
+
+
 # Define lists
 quarterhourly=()
 hourly=()
@@ -15,27 +55,7 @@ for container in $containers; do
     # Get the value of the label de.g3gg0.cron
     cron_label=$(docker inspect -f '{{ index .Config.Labels "de.g3gg0.cron" }}' "$container")
     container_name=$(docker inspect -f '{{ .Name }}' "$container" | sed 's|/||')
-
-    # Populate lists based on the label. Need separate variables as bash cannot assign lists to arrays
-    case "$cron_label" in
-        quarterhourly)
-            quarterhourly+=("$container ($container_name)")
-            ;;
-        hourly)
-            hourly+=("$container ($container_name)")
-            ;;
-        daily)
-            daily+=("$container ($container_name)")
-            ;;
-        weekly)
-            weekly+=("$container ($container_name)")
-            ;;
-        monthly)
-            monthly+=("$container ($container_name)")
-            ;;
-        *)
-            ;;
-    esac
+    container_table[$cron_label]+="$container:$container_name "
 done
 
 # Handle parameters
@@ -64,79 +84,23 @@ case "$1" in
             exit 1
         fi
 
-
         echo -e "Bash scripts created. Exiting."
         exit 0
         ;;
 
     list)
         echo -e "Containers with cron schedules:"
-        if [ ${#quarterhourly[@]} -gt 0 ]; then
-            echo -e "\n15min:"
-            printf "  %s\n" "${quarterhourly[@]}"
-        fi
-        if [ ${#hourly[@]} -gt 0 ]; then
-            echo -e "\nHourly:"
-            printf "  %s\n" "${hourly[@]}"
-        fi
-        if [ ${#daily[@]} -gt 0 ]; then
-            echo -e "\nDaily:"
-            printf "  %s\n" "${daily[@]}"
-        fi
-        if [ ${#weekly[@]} -gt 0 ]; then
-            echo -e "\nWeekly:"
-            printf "  %s\n" "${weekly[@]}"
-        fi
-        if [ ${#monthly[@]} -gt 0 ]; then
-            echo -e "\nMonthly:"
-            printf "  %s\n" "${monthly[@]}"
-        fi
+
+        list_containers quarterhourly
+        list_containers hourly
+        list_containers daily
+        list_containers weekly
+        list_containers monthly
         exit 0
         ;;
 
-    quarterhourly)
-        echo -e "Starting 15min containers:"
-        for container_entry in "${quarterhourly[@]}"; do
-            echo " - $container_entry"
-            container_id=$(echo "$container_entry" | awk '{print $1}')
-            docker start "$container_id"
-        done
-        ;;
-
-    hourly)
-        echo -e "Starting hourly containers:"
-        for container_entry in "${hourly[@]}"; do
-            echo " - $container_entry"
-            container_id=$(echo "$container_entry" | awk '{print $1}')
-            docker start "$container_id"
-        done
-        ;;
-
-    daily)
-        echo -e "Starting daily containers:"
-        for container_entry in "${daily[@]}"; do
-            echo " - $container_entry"
-            container_id=$(echo "$container_entry" | awk '{print $1}')
-            docker start "$container_id"
-        done
-        ;;
-
-    weekly)
-        echo -e "Starting weekly containers:"
-        for container_entry in "${weekly[@]}"; do
-            echo " - $container_entry"
-            container_id=$(echo "$container_entry" | awk '{print $1}')
-            docker start "$container_id"
-        done
-        ;;
-
-    monthly)
-        echo -e "Starting monthly containers:"
-        for container_entry in "${monthly[@]}"; do
-            echo " - $container_entry"
-            container_id=$(echo "$container_entry" | awk '{print $1}')
-            docker start "$container_id"
-        done
+    quarterhourly|hourly|daily|weekly|monthly)
+        start_containers "$1"
         ;;
 
     *)
