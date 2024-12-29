@@ -30,7 +30,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@9ec57ed1fcdbf14dcef7dfbe97b2010124a938b7
         with:
-          images: ghcr.io/g3gg0/de.g3gg0.cron
+          images: ghcr.io/g3gg0/docker_cron
 
       - name: Build and push Docker image
         id: push
@@ -45,6 +45,6 @@ jobs:
       - name: Generate artifact attestation
         uses: actions/attest-build-provenance@v2
         with:
-          subject-name: ghcr.io/g3gg0/de.g3gg0.cron
+          subject-name: ghcr.io/g3gg0/docker_cron
           subject-digest: ${{ steps.push.outputs.digest }}
           push-to-registry: true
