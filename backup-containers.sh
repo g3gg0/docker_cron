@@ -55,7 +55,10 @@ for container in $containers; do
     # Get the value of the label de.g3gg0.cron
     cron_label=$(docker inspect -f '{{ index .Config.Labels "de.g3gg0.cron" }}' "$container")
     container_name=$(docker inspect -f '{{ .Name }}' "$container" | sed 's|/||')
-    container_table[$cron_label]+="$container:$container_name "
+    
+    if [[ -n "$cron_label" ]]; then
+        container_table[$cron_label]+="$container:$container_name "
+    fi
 done
 
 # Handle parameters
