@@ -36,7 +36,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@9ec57ed1fcdbf14dcef7dfbe97b2010124a938b7
         with:
-          images: g3gg0/de.g3gg0.cron
+          images: ghcr.io/g3gg0/de.g3gg0.cron
 
       - name: Build and push Docker image
         id: push
