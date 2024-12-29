@@ -16,8 +16,8 @@ start_containers() {
         return
     fi
     for container_entry in ${container_table[$schedule]}; do
-        container_id=$(echo "$container_entry" | awk --field-separator=':' '{print $1}')
-        container_name=$(echo "$container_entry" | awk --field-separator=':' '{print $2}')
+        container_id=$(echo "$container_entry" | awk -F ':' '{print $1}')
+        container_name=$(echo "$container_entry" | awk -F ':' '{print $2}')
         echo " - $container_name ($container_id)"
         docker start "$container_id"
     done
@@ -33,8 +33,8 @@ list_containers() {
     fi
 
     for container_entry in ${container_table[$schedule]}; do
-        container_id=$(echo "$container_entry" | awk --field-separator=':' '{print $1}')
-        container_name=$(echo "$container_entry" | awk --field-separator=':' '{print $2}')
+        container_id=$(echo "$container_entry" | awk -F ':' '{print $1}')
+        container_name=$(echo "$container_entry" | awk -F ':' '{print $2}')
         echo "   - $container_name ($container_id)"
     done
 }
