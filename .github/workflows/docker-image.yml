@@ -51,6 +51,6 @@ jobs:
       - name: Generate artifact attestation
         uses: actions/attest-build-provenance@v2
         with:
-          subject-name: g3gg0/de.g3gg0.cron
+          subject-name: ghcr.io/g3gg0/de.g3gg0.cron
           subject-digest: ${{ steps.push.outputs.digest }}
           push-to-registry: true
