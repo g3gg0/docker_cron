@@ -30,7 +30,7 @@ Create a new stack with this compose
 
     services:
       cron:
-        image: ghcr.io/g3gg0/de.g3gg0.cron:master
+        image: ghcr.io/g3gg0/docker_cron:master
         restart: unless-stopped
         volumes:
           - /var/run/docker.sock:/var/run/docker.sock
