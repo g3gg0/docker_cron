@@ -19,7 +19,7 @@ start_containers() {
         container_id=$(echo "$container_entry" | awk -F ':' '{print $1}')
         container_name=$(echo "$container_entry" | awk -F ':' '{print $2}')
         echo " - $container_name ($container_id)"
-        docker start "$container_id"
+        docker start "$container_id" > /dev/null || echo "Failed"
     done
 }
 
