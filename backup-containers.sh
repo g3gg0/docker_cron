@@ -78,8 +78,6 @@ for container_id in $all_containers; do
              # Use printf for error output
              printf "Warning: Container %s has invalid cron label '%s'. Ignoring.\n" "$container_id" "$cron_label" >&2
         fi
-    elif [[ $? -ne 0 ]]; then
-        # No Label, no error needs to be thrown
     fi
 done
 
