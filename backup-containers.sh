@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -vx
 
 declare -A container_table
 
