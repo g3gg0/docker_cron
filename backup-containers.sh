@@ -1,4 +1,4 @@
-#!/bin/bash -vx
+#!/bin/bash
 
 declare -A container_table
 
@@ -38,7 +38,6 @@ list_containers() {
     # Check if the entry for the schedule is empty or just whitespace
     if [[ -z "${container_table[$schedule]// }" ]]; then
         printf "   - none\n"
-        return
     fi
 
     # Use word splitting intentionally here by not quoting the variable
