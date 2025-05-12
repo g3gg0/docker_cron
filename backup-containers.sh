@@ -35,10 +35,6 @@ list_containers() {
 
     # Use printf for output
     printf "  Registered %s containers:\n" "$schedule"
-    # Check if the entry for the schedule is empty or just whitespace
-    if [[ -z "${container_table[$schedule]// }" ]]; then
-        printf "   - none\n"
-    fi
 
     # Use word splitting intentionally here by not quoting the variable
     for container_entry in ${container_table[$schedule]}; do
@@ -83,8 +79,7 @@ for container_id in $all_containers; do
              printf "Warning: Container %s has invalid cron label '%s'. Ignoring.\n" "$container_id" "$cron_label" >&2
         fi
     elif [[ $? -ne 0 ]]; then
-        # Use printf for error output
-        printf "Warning: Failed to inspect container %s. It might have been removed.\n" "$container_id" >&2
+        # No Label, no error needs to be thrown
     fi
 done
 
